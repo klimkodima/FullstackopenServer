@@ -23,9 +23,15 @@ const people = [
       "number": "39-23-6423122"
     }
 ]
+let info = `<p>Phonebook has info for ${people.length} people</p>
+<p>${new Date}</p>`
 
 app.get('/api/people', (request, response) => {
     response.json(people)
+  })
+
+  app.get('/info', (request, response) => {
+    response.send(info)
   })
   
   const PORT = 3001
