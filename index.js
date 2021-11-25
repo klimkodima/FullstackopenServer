@@ -53,9 +53,17 @@ app.delete('/api/people/:id', (request, response) => {
 
 app.post('/api/person', (request, response) => {
     const person = request.body
-    person.id =Math.floor(Math.random() * 100000)
+    if (!person.name) {
+        return response.status(400).json({ error: "Name must not be empty" })
+    }
+    if (!person.number) {
+        return response.status(400).json({ error: "Number must not be empty" })
+    }
+    if (people.find(p => p.name === person.name)) {
+        return response.status(400).json({ error: 'Name must be unique' })
+    }
+    person.id = Math.floor(Math.random() * 100000)
     people = people.concat(person)
-    console.log(person)
     response.json(person)
 })
 
