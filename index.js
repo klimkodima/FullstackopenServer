@@ -2,25 +2,25 @@ const express = require('express')
 const app = express()
 
 const people = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
+    {
+        "id": 1,
+        "name": "Arto Hellas",
+        "number": "040-123456"
     },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
+    {
+        "id": 2,
+        "name": "Ada Lovelace",
+        "number": "39-44-5323523"
     },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
+    {
+        "id": 3,
+        "name": "Dan Abramov",
+        "number": "12-43-234345"
     },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
+    {
+        "id": 4,
+        "name": "Mary Poppendieck",
+        "number": "39-23-6423122"
     }
 ]
 let info = `<p>Phonebook has info for ${people.length} people</p>
@@ -28,13 +28,23 @@ let info = `<p>Phonebook has info for ${people.length} people</p>
 
 app.get('/api/people', (request, response) => {
     response.json(people)
-  })
+})
 
-  app.get('/info', (request, response) => {
+app.get('/info', (request, response) => {
     response.send(info)
-  })
-  
-  const PORT = 3001
-  app.listen(PORT, () => {
+})
+
+app.get('/api/people/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const human = people.find(human => human.id === id)
+    if (human) {
+        response.json(human)
+      } else {
+        response.status(404).send( "Not found")
+      }
+})
+
+const PORT = 3001
+app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
-  })
+})
