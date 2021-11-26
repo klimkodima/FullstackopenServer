@@ -18,20 +18,9 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ')
 }))
 app.use(express.json())
-Person.find({}).then(result => {
-    console.log(result)
-    result.forEach(person => {
-      console.log(person)
-    })
-})
 
 app.get('/api/people', (request, response) => {
-    console.log("connect")
     Person.find({}).then(result => {
-        console.log(result)
-        result.forEach(person => {
-          console.log(person)
-        })
         response.json(result)
     })
 })
@@ -43,13 +32,13 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/people/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = people.find(person => person.id === id)
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).send("Not found")
-    }
+    Person.findById(request.params.id).then(person =>{
+        if (person) {
+            response.json(person)
+        } else {
+            response.status(404).send("Not found")
+        }
+    })
 })
 
 app.delete('/api/people/:id', (request, response) => {
@@ -66,12 +55,16 @@ app.post('/api/person', (request, response) => {
     if (!person.number) {
         return response.status(400).json({ error: "Number must not be empty" })
     }
-    if (people.find(p => p.name === person.name)) {
+    if (false) {
         return response.status(400).json({ error: 'Name must be unique' })
     }
-    person.id = Math.floor(Math.random() * 100000)
-    people = people.concat(person)
-    response.json(person)
+    const newPerson = new Person({
+        name:person.name,
+        number:person.number
+    }) 
+    newPerson.save().then(savedPerson => {
+        response.json(savedPerson)
+      })
 })
 
 const PORT = process.env.PORT;
